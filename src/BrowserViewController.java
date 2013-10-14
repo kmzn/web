@@ -49,7 +49,40 @@ public class BrowserViewController implements Initializable {
     public void chooseFile(ActionEvent event) {
         File importFile = fileChooser.showOpenDialog(null);
         if (importFile != null && importFile.getName().endsWith(".md")) {
-            System.out.println("ok");
+            
+            String command = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+            command += importFile.getAbsolutePath();
+            System.out.println(command);
+            String res = "";
+Process process = null;
+                    try {
+                        process = Runtime.getRuntime().exec(command);
+                    } catch (IOException ex) {
+                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+BufferedReader in = new BufferedReader(new InputStreamReader(process
+    .getInputStream()));
+String line;
+
+int c = 0;
+                    try {
+                        while ((line = in.readLine()) != null) {
+                            res += line;//
+                            System.out.println(line);
+                            c += line.length();
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        in.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    //System.out.println(res);
+                    System.out.println(c);
+                    webEngine.loadContent(res);
         }
     }
     
@@ -141,50 +174,6 @@ public class BrowserViewController implements Initializable {
                     // ページのロードに成功したらURLをテキストフィールドに表示する
                     urlField.setText(webEngine.getLocation());
                 } else if (newState == Worker.State.FAILED) {
-                    
-                    // （１）ローカルフォルダのHTMLを指定
-                    String url = "file:///c:/cygwin64/home/kamizono/md2html/HowToUse/tutorial/ranking02_Get.html";//"file:///c:/Temp/javafxtest.html";
-                    webEngine.load(url);
-                    
-                    
-                    
-                    //String command = "pandoc -v";
-                    //String path = "c:/cygwin64/home/kamizono/md/HowToUse/tutorial/ranking01_Introduction.md";
-                    String path = "c:/cygwin64/home/kamizono/md/HowToUse/tutorial/ranking02_Get.md";
-                    String command = "pandoc -s -f markdown -t html5 --highlight-style=tango     " + path;
-                    command += " -o ranking02_Get.html";
-                    String res = "";
-Process process = null;
-                    try {
-                        process = Runtime.getRuntime().exec(command);
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-BufferedReader in = new BufferedReader(new InputStreamReader(process
-    .getInputStream()));
-String line;
-
-int c = 0;
-                    try {
-                        while ((line = in.readLine()) != null) {
-                            res += line;//
-                            System.out.println(line);
-                            c += line.length();
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    try {
-                        in.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                    //System.out.println(res);
-                    System.out.println(c);
-                    webEngine.loadContent(res);
-                
-                    
                     
                 }
             }
