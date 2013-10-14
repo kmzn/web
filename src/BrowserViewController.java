@@ -54,35 +54,35 @@ public class BrowserViewController implements Initializable {
             command += importFile.getAbsolutePath();
             System.out.println(command);
             String res = "";
-Process process = null;
-                    try {
-                        process = Runtime.getRuntime().exec(command);
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-BufferedReader in = new BufferedReader(new InputStreamReader(process
-    .getInputStream()));
-String line;
+            Process process = null;
+            try {
+                process = Runtime.getRuntime().exec(command);
+            } catch (IOException ex) {
+                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            BufferedReader in = new BufferedReader(new InputStreamReader(process
+                    .getInputStream()));
+            String line;
 
-int c = 0;
-                    try {
-                        while ((line = in.readLine()) != null) {
-                            res += line;//
-                            System.out.println(line);
-                            c += line.length();
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    try {
-                        in.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                    //System.out.println(res);
-                    System.out.println(c);
-                    webEngine.loadContent(res);
+            int c = 0;
+            try {
+                while ((line = in.readLine()) != null) {
+                    res += line;//
+                    System.out.println(line);
+                    c += line.length();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //System.out.println(res);
+            System.out.println(c);
+            webEngine.loadContent(res);
         }
     }
     
