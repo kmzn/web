@@ -45,12 +45,14 @@ public class BrowserViewController implements Initializable {
     private WebEngine webEngine;
     private WebHistory webHistory;
     
+    static String command = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+    
     @FXML
     public void chooseFile(ActionEvent event) {
         File importFile = fileChooser.showOpenDialog(null);
         if (importFile != null && importFile.getName().endsWith(".md")) {
             
-            String command = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+            
             command += importFile.getAbsolutePath();
             System.out.println(command);
             String res = "";
