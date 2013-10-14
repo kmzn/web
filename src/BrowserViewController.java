@@ -121,7 +121,7 @@ public class BrowserViewController implements Initializable {
         Label messageLabel = new Label(message);
         messageLabel.setFont(Font.font(null, 16.0));
         root.setCenter(messageLabel);
-        root.setAlignment(messageLabel, Pos.CENTER);
+        BorderPane.setAlignment(messageLabel, Pos.CENTER);
         
         Button closeButton = new Button("OK");
         closeButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -132,7 +132,7 @@ public class BrowserViewController implements Initializable {
         });
         
         root.setBottom(closeButton);
-        root.setAlignment(closeButton, Pos.CENTER);
+        BorderPane.setAlignment(closeButton, Pos.CENTER);
         
         Scene scene = new Scene(root);
         dialog.setScene(scene);
