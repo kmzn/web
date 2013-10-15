@@ -8,10 +8,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.web.WebEngine;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author kamizono

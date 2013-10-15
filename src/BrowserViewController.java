@@ -49,7 +49,7 @@ public class BrowserViewController implements Initializable {
     @FXML
     public void chooseFile(ActionEvent event) {
         File importFile = fileChooser.showOpenDialog(null);
-        if (importFile != null && importFile.getName().endsWith(".md")) {
+        if (importFile != null) {
             
             convertService.command = PANDOC + importFile.getAbsolutePath();
             System.out.println(convertService.command);
