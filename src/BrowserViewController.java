@@ -55,36 +55,26 @@ public class BrowserViewController implements Initializable {
             
             String command = PANDOC + importFile.getAbsolutePath();
             System.out.println(command);
-            String res = "";
+            
             Process process = null;
             try {
                 process = Runtime.getRuntime().exec(command);
             } catch (IOException ex) {
                 Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            BufferedReader in = new BufferedReader(new InputStreamReader(process
-                    .getInputStream()));
-            String line;
-
-            int c = 0;
-            try {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(process
+                    .getInputStream()))) {
+                String line;
+                StringBuilder total = new StringBuilder();
                 while ((line = in.readLine()) != null) {
-                    res += line;//
-                    System.out.println(line);
-                    c += line.length();
+                    total.append(line);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                in.close();
+                webEngine.loadContent(total.toString());
             } catch (IOException ex) {
                 Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            //System.out.println(res);
-            System.out.println(c);
-            webEngine.loadContent(res);
+            
         }
     }
     
