@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -37,6 +38,8 @@ public class BrowserViewController implements Initializable {
     @FXML
     private WebView webView;
     @FXML
+    private TextArea editArea;// = new TextArea();
+    @FXML
     private Button button;
     private FileChooser fileChooser = new FileChooser();
     private WebEngine webEngine;
@@ -54,6 +57,8 @@ public class BrowserViewController implements Initializable {
             convertService.command = PANDOC + importFile.getAbsolutePath();
             System.out.println(convertService.command);
             convertService.restart();
+            
+            
        }
     }
     
@@ -114,6 +119,7 @@ public class BrowserViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        
         // ファイル選択の設定
         fileChooser.setTitle("select markdown file");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
@@ -125,6 +131,7 @@ public class BrowserViewController implements Initializable {
             @Override
             public void handle(WorkerStateEvent event) {
                 convertService.load(webEngine);
+                convertService.load(editArea);
             }
             
         });

@@ -16,7 +16,7 @@ public class HtmlBrowser extends Application {
     public void start(Stage stage) throws IOException {
         BorderPane root = FXMLLoader.load(getClass().getResource("BrowserView.fxml"));
         Scene scene = new Scene(root);
-
+        
         stage.setTitle("HtmlBrowser");
         stage.setScene(scene);
         stage.show();

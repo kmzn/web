@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.control.TextArea;
 import javafx.scene.web.WebEngine;
 
 /**
@@ -22,6 +23,10 @@ public class ConvertService extends Service {
     
     public void load(WebEngine webEngine) {
         webEngine.loadContent(result);
+    }
+    public void load(TextArea textArea) {
+        textArea.setText(result);
+        System.out.println(result);
     }
 
     @Override

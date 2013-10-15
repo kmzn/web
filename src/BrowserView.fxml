@@ -9,19 +9,34 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<BorderPane fx:id="root" prefWidth="640.0" prefHeight="480.0" xmlns:fx="http://javafx.com/fxml" fx:controller="BrowserViewController">
-  <center>
-    <WebView fx:id="webView" prefWidth="640.0" prefHeight="480.0"  />
-  </center>
+<BorderPane fx:id="root" prefWidth="1260.0" prefHeight="800.0" xmlns:fx="http://javafx.com/fxml" fx:controller="BrowserViewController">
+    <center>
+        <HBox id="hbox" prefHeight="800.0" prefWidth="1260.0">
+            <children>
+              
+                <TextArea fx:id="editField"          
+                        prefWidth="640.0" prefHeight="480.0"
+                        wrapText="true"
+                         />
+                
+                <WebView fx:id="webView" prefWidth="640.0" prefHeight="480.0"  />
+                
+            </children>
+        </HBox>
+    </center>
  
-  <top>
-    <HBox id="hbox" prefHeight="100.0" prefWidth="200.0">
-      <children>
-        <Button text="B" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
-        <Button text="F" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
-        <TextField fx:id="urlField" onAction="#load" prefWidth="200.0" />
-        <Button text="file" prefWidth="80.0" fx:id="fileButton" onAction="#chooseFile" />
-      </children>
-    </HBox>
-  </top>
+    <top>
+        <HBox id="hbox" prefHeight="60.0" prefWidth="200.0">
+            <children>
+                <Button text="B" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
+                <Button text="F" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
+                <TextField fx:id="urlField" onAction="#load" prefWidth="200.0" />
+                <Button text="file" prefWidth="80.0" fx:id="fileButton" onAction="#chooseFile" />
+        
+        
+       
+        
+            </children>
+        </HBox>
+    </top>
 </BorderPane>
