@@ -1,15 +1,12 @@
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -41,9 +38,11 @@ public class BrowserViewController implements Initializable {
     private WebView webView;
     @FXML
     private Button button;
-    FileChooser fileChooser = new FileChooser();
+    private FileChooser fileChooser = new FileChooser();
     private WebEngine webEngine;
     private WebHistory webHistory;
+    
+    private ConvertService convertService = new ConvertService();
     
     static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     
@@ -52,30 +51,10 @@ public class BrowserViewController implements Initializable {
         File importFile = fileChooser.showOpenDialog(null);
         if (importFile != null && importFile.getName().endsWith(".md")) {
             
-            
-            String command = PANDOC + importFile.getAbsolutePath();
-            System.out.println(command);
-            
-            Process process = null;
-            try {
-                process = Runtime.getRuntime().exec(command);
-            } catch (IOException ex) {
-                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(process
-                    .getInputStream()))) {
-                String line;
-                StringBuilder total = new StringBuilder();
-                while ((line = in.readLine()) != null) {
-                    total.append(line);
-                }
-                webEngine.loadContent(total.toString());
-            } catch (IOException ex) {
-                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            
-        }
+            convertService.command = PANDOC + importFile.getAbsolutePath();
+            System.out.println(convertService.command);
+            convertService.restart();
+       }
     }
     
     @FXML
@@ -139,6 +118,16 @@ public class BrowserViewController implements Initializable {
         fileChooser.setTitle("select markdown file");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().add(new ExtensionFilter("markdown", "*.md", "*.MD"));
+        
+        // 変換が終わったら反映させる
+        convertService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            
+            @Override
+            public void handle(WorkerStateEvent event) {
+                convertService.load(webEngine);
+            }
+            
+        });
         
         // テキストフィールドの幅をボーダペインの幅にバインドする
         urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
