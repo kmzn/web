@@ -1,7 +1,7 @@
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Service;
@@ -37,15 +37,22 @@ public class ConvertService extends Service {
                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
 
                 }
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(process
-                        .getInputStream()))) {
-                    String line;
-                    StringBuilder total = new StringBuilder();
-                    while ((line = in.readLine()) != null) {
-                        total.append(line);
+                
+                try (DataInputStream in =  new DataInputStream(
+                        new BufferedInputStream(process.getInputStream())) ) {
+                    
+                    String line = new String();
+                    int readByte = 0, totalByte = 0;
+                    byte[] b = new byte[1024];
+                    while(-1 != (readByte = in.read(b))){
+                        String xx = new String(b, "UTF-8");
+                        System.out.println(xx.length());
+                        line += xx;
+                        System.out.println("Read: " + readByte + " Total: " + totalByte);
                     }
-                    result = total.toString();
-                } catch (IOException ex) {
+                    result = line;
+                }
+                catch (IOException ex) {
                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
