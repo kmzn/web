@@ -24,10 +24,6 @@ public class ConvertService extends Service {
     public void load(WebEngine webEngine) {
         webEngine.loadContent(result);
     }
-    public void load(TextArea textArea) {
-        textArea.setText(result);
-        System.out.println(result);
-    }
 
     @Override
     protected Task createTask() {

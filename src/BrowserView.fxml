@@ -14,7 +14,7 @@
         <HBox id="hbox" prefHeight="800.0" prefWidth="1260.0">
             <children>
               
-                <TextArea fx:id="editField"          
+                <TextArea fx:id="editArea"          
                         prefWidth="640.0" prefHeight="480.0"
                         wrapText="true"
                          />
@@ -32,10 +32,7 @@
                 <Button text="F" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
                 <TextField fx:id="urlField" onAction="#load" prefWidth="200.0" />
                 <Button text="file" prefWidth="80.0" fx:id="fileButton" onAction="#chooseFile" />
-        
-        
-       
-        
+  
             </children>
         </HBox>
     </top>

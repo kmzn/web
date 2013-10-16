@@ -38,7 +38,7 @@ public class BrowserViewController implements Initializable {
     @FXML
     private WebView webView;
     @FXML
-    private TextArea editArea;// = new TextArea();
+    private TextArea editArea;
     @FXML
     private Button button;
     private FileChooser fileChooser = new FileChooser();
@@ -46,6 +46,7 @@ public class BrowserViewController implements Initializable {
     private WebHistory webHistory;
     
     private ConvertService convertService = new ConvertService();
+    private FileReaderService fileReaderService = new FileReaderService();
     
     static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     
@@ -58,7 +59,8 @@ public class BrowserViewController implements Initializable {
             System.out.println(convertService.command);
             convertService.restart();
             
-            
+            fileReaderService.file = importFile;
+            fileReaderService.restart();
        }
     }
     
@@ -119,7 +121,6 @@ public class BrowserViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        
         // ファイル選択の設定
         fileChooser.setTitle("select markdown file");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
@@ -131,7 +132,7 @@ public class BrowserViewController implements Initializable {
             @Override
             public void handle(WorkerStateEvent event) {
                 convertService.load(webEngine);
-                convertService.load(editArea);
+                fileReaderService.load(editArea);
             }
             
         });
