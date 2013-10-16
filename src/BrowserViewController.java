@@ -128,13 +128,16 @@ public class BrowserViewController implements Initializable {
         
         // 変換が終わったら反映させる
         convertService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            
             @Override
             public void handle(WorkerStateEvent event) {
                 convertService.load(webEngine);
+            }
+        });
+        fileReaderService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
                 fileReaderService.load(editArea);
             }
-            
         });
         
         // テキストフィールドの幅をボーダペインの幅にバインドする
