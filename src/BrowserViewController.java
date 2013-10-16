@@ -1,7 +1,13 @@
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -47,6 +53,9 @@ public class BrowserViewController implements Initializable {
     
     private ConvertService convertService = new ConvertService();
     private FileReaderService fileReaderService = new FileReaderService();
+    
+    String OutputFileName = "temp.md";
+    File outputFile = new File(OutputFileName);
     
     static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     
@@ -139,7 +148,24 @@ public class BrowserViewController implements Initializable {
                 fileReaderService.load(editArea);
             }
         });
-        
+        editArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+
+                try (PrintWriter pw = new PrintWriter(
+                        new OutputStreamWriter(new FileOutputStream(outputFile)))) {
+                    // ファイルへの書き込み
+                    pw.println(editArea.getText());
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                // 保存したtemp.mdをhtmlに変換して表示
+                convertService.command = PANDOC + "temp.md";
+                System.out.println(convertService.command);
+                convertService.restart();
+            }
+        });
+
         // テキストフィールドの幅をボーダペインの幅にバインドする
         urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
 
