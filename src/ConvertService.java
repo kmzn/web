@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.control.TextArea;
 import javafx.scene.web.WebEngine;
 
 /**
