@@ -1,7 +1,8 @@
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -10,25 +11,27 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.web.WebEngine;
 
-
 /**
  *
  * @author kamizono
  */
 public class ConvertService extends Service {
 
-    private String result;
+    private byte[] lines;
     private final Lock lock = new ReentrantLock();
     public String command;
-    
+
     public ConvertService() {
     }
-  
+
     public void load(WebEngine webEngine) {
 
         if (lock.tryLock()) {
             try {
+                String result = new String(lines, "UTF-8");
                 webEngine.loadContent(result);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ConvertService.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 lock.unlock();
             }
@@ -37,15 +40,26 @@ public class ConvertService extends Service {
         }
     }
 
+    private byte[] readAll(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        while (true) {
+            int len = inputStream.read(buffer);
+            if (len < 0) {
+                break;
+            }
+            bout.write(buffer, 0, len);
+        }
+        return bout.toByteArray();
+    }
+
     @Override
     protected Task createTask() {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
 
-
                 if (lock.tryLock()) {
-                    System.out.println("if (lock.tryLock()) ");
                     try {
                         Process process = null;
                         try {
@@ -53,30 +67,14 @@ public class ConvertService extends Service {
                         } catch (IOException ex) {
                             Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        lines = readAll(process.getInputStream());
 
-                        try (DataInputStream in = new DataInputStream(
-                                new BufferedInputStream(process.getInputStream()))) {
-
-                            String line = new String();
-                            int readByte = 0, totalByte = 0;
-                            byte[] b = new byte[1024];
-                            while (-1 != (readByte = in.read(b))) {
-                                String xx = new String(b, "UTF-8");
-                                System.out.println(xx.length());
-                                line += xx;
-                                System.out.println("ConvertService Read: " + readByte + " Total: " + totalByte);
-                            }
-                            result = line;
-                        } catch (IOException ex) {
-                            Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
                     } finally {
                         lock.unlock();
                     }
                 } else {
                     // perform alternative actions
                 }
-
                 return null;
             }
         };
