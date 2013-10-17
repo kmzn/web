@@ -2,6 +2,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -24,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -57,6 +60,7 @@ public class BrowserViewController implements Initializable {
     private Boolean isFileLoading = false;
     private static String OutputFileName = "temp.md";
     private File outputFile = new File(OutputFileName);
+    private String mdFilePath;
     
     static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     
@@ -73,6 +77,7 @@ public class BrowserViewController implements Initializable {
             fileReaderService.restart();
             
             isFileLoading = true;
+            mdFilePath = importFile.getAbsolutePath();
        }
     }
     
@@ -169,6 +174,27 @@ public class BrowserViewController implements Initializable {
                 convertService.command = PANDOC + "temp.md";
                 System.out.println(convertService.command);
                 convertService.restart();
+            }
+        });
+        editArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                switch (e.getCode()) {
+                    case ENTER:
+                        break;
+                    case S:
+                        if (e.isControlDown()) {
+
+                            try (FileWriter filewriter = new FileWriter(new File(mdFilePath))) {
+                                filewriter.write(editArea.getText());
+                            } catch (IOException ex) {
+                                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        }
+                        break;
+                    default:
+                }
             }
         });
 
