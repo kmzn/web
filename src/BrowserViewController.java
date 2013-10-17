@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -163,11 +166,12 @@ public class BrowserViewController implements Initializable {
 
                 // ファイルローディングのテキスト変更は無視
                 if (isFileLoading) return;
-                try (PrintWriter pw = new PrintWriter(
-                        new OutputStreamWriter(new FileOutputStream(outputFile)))) {
-                    // ファイルへの書き込み
-                    pw.println(editArea.getText());
-                } catch (FileNotFoundException ex) {
+                
+                byte[] bytes = editArea.getText().getBytes();
+                Path dest = Paths.get(OutputFileName);
+                try {
+                    Files.write(dest, bytes);
+                } catch (IOException ex) {
                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 // 保存したtemp.mdをhtmlに変換して表示
@@ -184,13 +188,13 @@ public class BrowserViewController implements Initializable {
                         break;
                     case S:
                         if (e.isControlDown()) {
-
-                            try (FileWriter filewriter = new FileWriter(new File(mdFilePath))) {
-                                filewriter.write(editArea.getText());
+                            byte[] bytes = editArea.getText().getBytes();
+                            Path dest = Paths.get(mdFilePath);
+                            try {
+                                Files.write(dest, bytes);
                             } catch (IOException ex) {
                                 Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
                         }
                         break;
                     default:
