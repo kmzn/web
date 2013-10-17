@@ -73,7 +73,7 @@ public class BrowserViewController implements Initializable {
             System.out.println(convertService.command);
             convertService.restart();
             
-            fileReaderService.file = importFile;
+            fileReaderService.filePath = importFile.getAbsolutePath();
             fileReaderService.restart();
             
             isFileLoading = true;
