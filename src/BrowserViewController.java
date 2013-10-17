@@ -54,8 +54,9 @@ public class BrowserViewController implements Initializable {
     private ConvertService convertService = new ConvertService();
     private FileReaderService fileReaderService = new FileReaderService();
     
-    String OutputFileName = "temp.md";
-    File outputFile = new File(OutputFileName);
+    private Boolean isFileLoading = false;
+    private static String OutputFileName = "temp.md";
+    private File outputFile = new File(OutputFileName);
     
     static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     
@@ -70,6 +71,8 @@ public class BrowserViewController implements Initializable {
             
             fileReaderService.file = importFile;
             fileReaderService.restart();
+            
+            isFileLoading = true;
        }
     }
     
@@ -140,6 +143,7 @@ public class BrowserViewController implements Initializable {
             @Override
             public void handle(WorkerStateEvent event) {
                 convertService.load(webEngine);
+                isFileLoading = false;
             }
         });
         fileReaderService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -152,6 +156,8 @@ public class BrowserViewController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
 
+                // ファイルローディングのテキスト変更は無視
+                if (isFileLoading) return;
                 try (PrintWriter pw = new PrintWriter(
                         new OutputStreamWriter(new FileOutputStream(outputFile)))) {
                     // ファイルへの書き込み
