@@ -29,6 +29,7 @@ public class ConvertService extends Service {
         if (lock.tryLock()) {
             try {
                 String result = new String(lines, "UTF-8");
+                System.out.println(result);
                 webEngine.loadContent(result);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ConvertService.class.getName()).log(Level.SEVERE, null, ex);
