@@ -44,24 +44,27 @@ public class BrowserViewController implements Initializable {
     private ConvertService convertService = new ConvertService();
     private FileReaderService fileReaderService = new FileReaderService();
     private Boolean isFileLoading = false;
-    private static String OutputFileName = "temp.md";
+    //private static String OutputFileName = "temp.md";
     private String mdFilePath;
     private FileChooser fileChooserPic = new FileChooser();
-    static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+    
 
     @FXML
     public void chooseFile(ActionEvent event) {
         File importFile = fileChooser.showOpenDialog(null);
         if (importFile != null) {
 
-            convertService.command = PANDOC + importFile.getAbsolutePath();
-            convertService.restart();
-
-            fileReaderService.filePath = importFile.getAbsolutePath();
-            fileReaderService.restart();
-
             isFileLoading = true;
             mdFilePath = importFile.getAbsolutePath();
+            
+            convertService.filePath = mdFilePath;
+                    //PANDOC + importFile.getAbsolutePath() + " -o " + importFile.getAbsolutePath().replaceAll(".md", ".html");
+            convertService.restart();
+
+            fileReaderService.filePath = mdFilePath;
+            fileReaderService.restart();
+
+            
         }
     }
 
@@ -123,14 +126,17 @@ public class BrowserViewController implements Initializable {
                 }
 
                 byte[] bytes = editArea.getText().getBytes();
-                Path dest = Paths.get(OutputFileName);
+                //Path dest = Paths.get(OutputFileName);
+                // mdFilePath
+                final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
+                Path dest = Paths.get(tempPath);
                 try {
                     Files.write(dest, bytes);
                 } catch (IOException ex) {
                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 // 保存したtemp.mdをhtmlに変換して表示
-                convertService.command = PANDOC + "temp.md";
+                convertService.filePath = tempPath; //command = PANDOC + "temp.md";
                 convertService.restart();
             }
         });
@@ -157,14 +163,12 @@ public class BrowserViewController implements Initializable {
                             if (importFile != null) {
                                 try {
                                     Path p1 = Paths.get(importFile.getCanonicalPath());
-
                                     Path p2 = Paths.get(mdFilePath);
-                                    Path p2_to_p1 = p2.relativize(p1);
-
+                                    String relPath = ResourceUtils.getRelativePath(p1.toString(), p2.toString(), "\\\\");
                                     editArea.insertText(editArea.getCaretPosition(), 
-                                            "![](file:/" + 
+                                            "![](file:" + 
                                             // ..\ => ..\\
-                                            p2_to_p1.toString().replaceAll("\\.\\.\\\\", "\\.\\.\\\\\\\\") + ")");
+                                            relPath + ")");
 
                                 } catch (IOException ex) {
                                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);

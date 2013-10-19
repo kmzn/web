@@ -2,7 +2,6 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -17,9 +16,11 @@ import javafx.scene.web.WebEngine;
  */
 public class ConvertService extends Service {
 
-    private byte[] lines;
+    static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+    //private byte[] lines;
     private final Lock lock = new ReentrantLock();
-    public String command;
+    //public String command;
+    public String filePath;
 
     public ConvertService() {
     }
@@ -28,11 +29,10 @@ public class ConvertService extends Service {
 
         if (lock.tryLock()) {
             try {
-                String result = new String(lines, "UTF-8");
-                System.out.println(result);
-                webEngine.loadContent(result);
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ConvertService.class.getName()).log(Level.SEVERE, null, ex);
+                //String result = new String(lines, "UTF-8");
+                System.out.println("file:"+filePath.replaceAll("\\.md", ".html"));
+                //webEngine.loadContent(result);
+                webEngine.load("file:"+filePath.replaceAll("\\.md", ".html"));
             } finally {
                 lock.unlock();
             }
@@ -64,11 +64,12 @@ public class ConvertService extends Service {
                     try {
                         Process process = null;
                         try {
+                            final String command = PANDOC + filePath + " -o " + filePath.replaceAll("\\.md", ".html");
                             process = Runtime.getRuntime().exec(command);
                         } catch (IOException ex) {
                             Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        lines = readAll(process.getInputStream());
+                        //lines = readAll(process.getInputStream());
 
                     } finally {
                         lock.unlock();
