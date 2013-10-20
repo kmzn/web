@@ -58,13 +58,15 @@ public class BrowserViewController implements Initializable {
             isFileLoading = true;
             mdFilePath = importFile.getAbsolutePath();
             
-            convertService.filePath = mdFilePath;
+            final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
+            convertService.filePath = tempPath;
             convertService.restart();
 
             fileReaderService.filePath = mdFilePath;
             fileReaderService.restart();
 
-            
+            TempFileDeleter.getInstance().add(tempPath);
+            TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
         }
     }
 
@@ -137,8 +139,7 @@ public class BrowserViewController implements Initializable {
                 convertService.filePath = tempPath;
                 convertService.restart();
                 
-                TempFileDeleter.getInstance().add(tempPath);
-                TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
+                
             }
         });
         editArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
