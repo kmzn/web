@@ -1,5 +1,6 @@
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.locks.Lock;
@@ -27,8 +28,9 @@ public class ConvertService extends Service {
 
         if (lock.tryLock()) {
             try {
-                //System.out.println("file:"+filePath.replaceAll("\\.md", ".html"));
-                webEngine.load("file:" + filePath.replaceAll("\\.md", ".html"));
+                
+                final String htmlPath = filePath.replaceAll("\\.md", ".html");
+                webEngine.load("file:" + htmlPath);
             } finally {
                 lock.unlock();
             }
@@ -46,9 +48,11 @@ public class ConvertService extends Service {
                 if (lock.tryLock()) {
                     try {
 
-                        final String command = PANDOC + filePath + " -o " + filePath.replaceAll("\\.md", ".html");
-                        Runtime.getRuntime().exec(command);
-
+                        final String htmlPath = filePath.replaceAll("\\.md", ".html");
+                        final String command = PANDOC + filePath + " -o " + htmlPath;
+                        Process p = Runtime.getRuntime().exec(command);
+                        p.waitFor();
+                        
                     } finally {
                         lock.unlock();
                     }
