@@ -47,6 +47,8 @@ public class BrowserViewController implements Initializable {
     private String mdFilePath;
     private FileChooser fileChooserPic = new FileChooser();
     
+    
+    
 
     @FXML
     public void chooseFile(ActionEvent event) {
@@ -134,6 +136,9 @@ public class BrowserViewController implements Initializable {
                 // 保存したtemp.mdをhtmlに変換して表示
                 convertService.filePath = tempPath;
                 convertService.restart();
+                
+                TempFileDeleter.getInstance().add(tempPath);
+                TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
             }
         });
         editArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
