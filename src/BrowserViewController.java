@@ -144,6 +144,8 @@ public class BrowserViewController implements Initializable {
                         break;
                     case S:
                         if (e.isControlDown()) {
+                            
+                            // md保存
                             byte[] bytes = editArea.getText().getBytes();
                             Path dest = Paths.get(mdFilePath);
                             try {
@@ -151,6 +153,9 @@ public class BrowserViewController implements Initializable {
                             } catch (IOException ex) {
                                 Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            // 保存したmdで変換したhtml保存
+                            convertService.filePath = mdFilePath;
+                            convertService.restart();
                         }
                         break;
                     case P:

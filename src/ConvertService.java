@@ -28,7 +28,7 @@ public class ConvertService extends Service {
         if (lock.tryLock()) {
             try {
                 //System.out.println("file:"+filePath.replaceAll("\\.md", ".html"));
-                webEngine.load("file:"+filePath.replaceAll("\\.md", ".html"));
+                webEngine.load("file:" + filePath.replaceAll("\\.md", ".html"));
             } finally {
                 lock.unlock();
             }
@@ -45,14 +45,9 @@ public class ConvertService extends Service {
 
                 if (lock.tryLock()) {
                     try {
-                        Process process = null;
-                        try {
-                            final String command = PANDOC + filePath + " -o " + filePath.replaceAll("\\.md", ".html");
-                            process = Runtime.getRuntime().exec(command);
-                        } catch (IOException ex) {
-                            Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        //lines = readAll(process.getInputStream());
+
+                        final String command = PANDOC + filePath + " -o " + filePath.replaceAll("\\.md", ".html");
+                        Runtime.getRuntime().exec(command);
 
                     } finally {
                         lock.unlock();
