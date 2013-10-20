@@ -16,10 +16,8 @@ import javafx.scene.web.WebEngine;
  */
 public class ConvertService extends Service {
 
-    static String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
-    //private byte[] lines;
+    static final String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     private final Lock lock = new ReentrantLock();
-    //public String command;
     public String filePath;
 
     public ConvertService() {
@@ -29,9 +27,7 @@ public class ConvertService extends Service {
 
         if (lock.tryLock()) {
             try {
-                //String result = new String(lines, "UTF-8");
-                System.out.println("file:"+filePath.replaceAll("\\.md", ".html"));
-                //webEngine.loadContent(result);
+                //System.out.println("file:"+filePath.replaceAll("\\.md", ".html"));
                 webEngine.load("file:"+filePath.replaceAll("\\.md", ".html"));
             } finally {
                 lock.unlock();
@@ -39,19 +35,6 @@ public class ConvertService extends Service {
         } else {
             // perform alternative actions
         }
-    }
-
-    private byte[] readAll(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        while (true) {
-            int len = inputStream.read(buffer);
-            if (len < 0) {
-                break;
-            }
-            bout.write(buffer, 0, len);
-        }
-        return bout.toByteArray();
     }
 
     @Override

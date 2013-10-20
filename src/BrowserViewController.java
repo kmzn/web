@@ -44,7 +44,6 @@ public class BrowserViewController implements Initializable {
     private ConvertService convertService = new ConvertService();
     private FileReaderService fileReaderService = new FileReaderService();
     private Boolean isFileLoading = false;
-    //private static String OutputFileName = "temp.md";
     private String mdFilePath;
     private FileChooser fileChooserPic = new FileChooser();
     
@@ -58,7 +57,6 @@ public class BrowserViewController implements Initializable {
             mdFilePath = importFile.getAbsolutePath();
             
             convertService.filePath = mdFilePath;
-                    //PANDOC + importFile.getAbsolutePath() + " -o " + importFile.getAbsolutePath().replaceAll(".md", ".html");
             convertService.restart();
 
             fileReaderService.filePath = mdFilePath;
@@ -120,14 +118,12 @@ public class BrowserViewController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
 
-                // ファイルローディングのテキスト変更は無視
+                // ファイルローディング中のテキスト変更は無視
                 if (isFileLoading) {
                     return;
                 }
 
                 byte[] bytes = editArea.getText().getBytes();
-                //Path dest = Paths.get(OutputFileName);
-                // mdFilePath
                 final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
                 Path dest = Paths.get(tempPath);
                 try {
@@ -136,7 +132,7 @@ public class BrowserViewController implements Initializable {
                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 // 保存したtemp.mdをhtmlに変換して表示
-                convertService.filePath = tempPath; //command = PANDOC + "temp.md";
+                convertService.filePath = tempPath;
                 convertService.restart();
             }
         });
@@ -166,9 +162,7 @@ public class BrowserViewController implements Initializable {
                                     Path p2 = Paths.get(mdFilePath);
                                     String relPath = ResourceUtils.getRelativePath(p1.toString(), p2.toString(), "\\\\");
                                     editArea.insertText(editArea.getCaretPosition(), 
-                                            "![](file:" + 
-                                            // ..\ => ..\\
-                                            relPath + ")");
+                                            "![](file:" + relPath + ")");
 
                                 } catch (IOException ex) {
                                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
