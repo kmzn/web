@@ -28,8 +28,6 @@
     <top>
         <HBox id="hbox" prefHeight="60.0" prefWidth="200.0">
             <children>
-                <Button text="B" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
-                <Button text="F" prefWidth="60.0" onMousePressed="#forward" pickOnBounds="true"  />
                 <TextField fx:id="urlField" onAction="#load" prefWidth="200.0" />
                 <Button text="file" prefWidth="80.0" fx:id="fileButton" onAction="#chooseFile" />
   

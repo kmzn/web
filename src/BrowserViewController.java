@@ -47,9 +47,6 @@ public class BrowserViewController implements Initializable {
     private String mdFilePath;
     private FileChooser fileChooserPic = new FileChooser();
     
-    
-    
-
     @FXML
     public void chooseFile(ActionEvent event) {
         File importFile = fileChooser.showOpenDialog(null);
@@ -75,23 +72,6 @@ public class BrowserViewController implements Initializable {
     public void load(ActionEvent event) {
         String url = urlField.getText();
         webEngine.load(url);
-    }
-
-    @FXML
-    public void backward(MouseEvent event) {
-        // ヒストリがある場合はページを戻す
-        if (webHistory.getCurrentIndex() > 0) {
-            webHistory.go(-1);
-        }
-    }
-
-    @FXML
-    public void forward(MouseEvent event) {
-        // ヒストリ現在位置より先にページがある場合は
-        // ページを進める
-        if (webHistory.getCurrentIndex() < webHistory.getEntries().size()) {
-            webHistory.go(1);
-        }
     }
 
     @Override
