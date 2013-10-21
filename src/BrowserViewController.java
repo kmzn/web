@@ -37,23 +37,23 @@ public class BrowserViewController implements Initializable {
     private WebView webView;
     @FXML
     private TextArea editArea;
-    private FileChooser fileChooser = new FileChooser();
     private WebEngine webEngine;
     private WebHistory webHistory;
     private ConvertService convertService = new ConvertService();
     private FileReaderService fileReaderService = new FileReaderService();
     private Boolean isFileLoading = false;
-    private String mdFilePath;
-    private FileChooser fileChooserPic = new FileChooser();
-    
+    private String mdFilePath = null;
+
     @FXML
     public void chooseFile(ActionEvent event) {
-        File importFile = fileChooser.showOpenDialog(null);
+
+        FileChooserManager.getInstance().changeMode(FileChooserManager.Mode.MD);
+        File importFile = FileChooserManager.getInstance().showDialog();
         if (importFile != null) {
 
             isFileLoading = true;
             mdFilePath = importFile.getAbsolutePath();
-            
+
             convertService.filePath = mdFilePath;
             convertService.restart();
 
@@ -80,14 +80,6 @@ public class BrowserViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        
-        // ファイル選択の設定
-        fileChooser.setTitle("select markdown file");
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("markdown", "*.md", "*.MD"));
-        fileChooserPic.setTitle("select img file");
-        fileChooserPic.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fileChooserPic.getExtensionFilters().add(new ExtensionFilter("img", "*.jpg", "*.png"));
         // 変換が終わったら反映させる
         convertService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
@@ -110,6 +102,9 @@ public class BrowserViewController implements Initializable {
                 if (isFileLoading) {
                     return;
                 }
+                if (mdFilePath == null) {
+                    return;
+                }
 
                 byte[] bytes = editArea.getText().getBytes();
                 final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
@@ -122,8 +117,8 @@ public class BrowserViewController implements Initializable {
                 // 保存したtemp.mdをhtmlに変換して表示
                 convertService.filePath = tempPath;
                 convertService.restart();
-                
-                
+
+
             }
         });
         editArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -133,8 +128,21 @@ public class BrowserViewController implements Initializable {
                     case ENTER:
                         break;
                     case S:
+
                         if (e.isControlDown()) {
-                            
+                            if (mdFilePath == null) {
+                                
+                                FileChooserManager.getInstance().changeMode(FileChooserManager.Mode.SAVE);
+                                File file = FileChooserManager.getInstance().showDialog();
+
+                                if (file == null) {
+                                    return;
+                                } else {
+                                    mdFilePath = file.getAbsolutePath();
+                                    System.out.println("" + mdFilePath);
+                                }
+
+                            }
                             // md保存
                             byte[] bytes = editArea.getText().getBytes();
                             Path dest = Paths.get(mdFilePath);
@@ -150,13 +158,18 @@ public class BrowserViewController implements Initializable {
                         break;
                     case P:
                         if (e.isControlDown()) {
-                            File importFile = fileChooserPic.showOpenDialog(null);
+                            // saveできないのでPICTUREは使えないように
+                            if (mdFilePath == null) {
+                                return;
+                            }
+                            FileChooserManager.getInstance().changeMode(FileChooserManager.Mode.PICTURE);
+                            File importFile = FileChooserManager.getInstance().showDialog();
                             if (importFile != null) {
                                 try {
                                     Path p1 = Paths.get(importFile.getCanonicalPath());
                                     Path p2 = Paths.get(mdFilePath);
                                     String relPath = ResourceUtils.getRelativePath(p1.toString(), p2.toString(), "\\\\");
-                                    editArea.insertText(editArea.getCaretPosition(), 
+                                    editArea.insertText(editArea.getCaretPosition(),
                                             "![](file:" + relPath + ")");
 
                                 } catch (IOException ex) {
@@ -178,7 +191,7 @@ public class BrowserViewController implements Initializable {
 
         // ヒストリを取得
         webHistory = webEngine.getHistory();
-        
+
         // for HTML's debug
         // webEngine.executeScript("(function(F,i,r,e,b,u,g,L,I,T,E){if(F.getElementById(b))return;E=F[i+'NS']&&F.documentElement.namespaceURI;E=E?F[i+'NS'](E,'script'):F[i]('script');E[r]('id',b);E[r]('src',I+g+T);E[r](b,u);(F[e]('head')[0]||F[e]('body')[0]).appendChild(E);E=new Image;E[r]('src',I+L);})(document,'createElement','setAttribute','getElementsByTagName','FirebugLite','4','firebug-lite.js','releases/lite/latest/skin/xp/sprite.png','https://getfirebug.com/','#startOpened');");
 
