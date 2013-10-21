@@ -24,8 +24,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class BrowserViewController implements Initializable {
 
@@ -125,7 +123,11 @@ public class BrowserViewController implements Initializable {
             @Override
             public void handle(KeyEvent e) {
                 switch (e.getCode()) {
-                    case ENTER:
+                    case N:
+                        // create new file
+                        mdFilePath = null;
+                        editArea.setText("");
+                        webEngine.load("");
                         break;
                     case S:
 
@@ -139,7 +141,7 @@ public class BrowserViewController implements Initializable {
                                     return;
                                 } else {
                                     mdFilePath = file.getAbsolutePath();
-                                    System.out.println("" + mdFilePath);
+                                    //System.out.println("" + mdFilePath);
                                 }
 
                             }
