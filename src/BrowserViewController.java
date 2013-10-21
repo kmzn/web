@@ -20,7 +20,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import static javafx.scene.input.KeyCode.S;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
@@ -55,7 +54,6 @@ public class BrowserViewController implements Initializable {
             isFileLoading = true;
             mdFilePath = importFile.getAbsolutePath();
             
-            
             convertService.filePath = mdFilePath;
             convertService.restart();
 
@@ -65,13 +63,18 @@ public class BrowserViewController implements Initializable {
             final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
             TempFileDeleter.getInstance().add(tempPath);
             TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
+        } else {
+            mdFilePath = null;
         }
     }
 
     @FXML
     public void load(ActionEvent event) {
-        String url = urlField.getText();
-        webEngine.load(url);
+        convertService.userCommand = urlField.getText();
+        if (mdFilePath != null) {
+            convertService.filePath = mdFilePath;
+            convertService.restart();
+        }
     }
 
     @Override
@@ -170,7 +173,7 @@ public class BrowserViewController implements Initializable {
 
         // テキストフィールドの幅をボーダペインの幅にバインドする
         urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
-
+        urlField.setText(ConvertService.PANDOC);
         webEngine = webView.getEngine();
 
         // ヒストリを取得

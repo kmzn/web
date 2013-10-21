@@ -13,6 +13,7 @@ public class ConvertService extends Service {
 
     static final String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
     private final Lock lock = new ReentrantLock();
+    public String userCommand = PANDOC;
     public String filePath;
 
     public ConvertService() {
@@ -42,7 +43,7 @@ public class ConvertService extends Service {
                     try {
 
                         final String htmlPath = filePath.replaceAll("\\.md", ".html");
-                        final String command = PANDOC + filePath + " -o " + htmlPath;
+                        final String command = userCommand + filePath + " -o " + htmlPath;
                         Process p = Runtime.getRuntime().exec(command);
                         p.waitFor();
                         
