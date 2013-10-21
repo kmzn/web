@@ -58,13 +58,14 @@ public class BrowserViewController implements Initializable {
             isFileLoading = true;
             mdFilePath = importFile.getAbsolutePath();
             
-            final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
-            convertService.filePath = tempPath;
+            
+            convertService.filePath = mdFilePath;
             convertService.restart();
 
             fileReaderService.filePath = mdFilePath;
             fileReaderService.restart();
 
+            final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
             TempFileDeleter.getInstance().add(tempPath);
             TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
         }

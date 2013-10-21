@@ -22,7 +22,6 @@ public class ConvertService extends Service {
 
         if (lock.tryLock()) {
             try {
-                
                 final String htmlPath = filePath.replaceAll("\\.md", ".html");
                 webEngine.load("file:" + htmlPath);
             } finally {
@@ -46,6 +45,7 @@ public class ConvertService extends Service {
                         final String command = PANDOC + filePath + " -o " + htmlPath;
                         Process p = Runtime.getRuntime().exec(command);
                         p.waitFor();
+                        
                         
                     } finally {
                         lock.unlock();
