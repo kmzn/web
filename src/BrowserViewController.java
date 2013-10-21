@@ -125,9 +125,11 @@ public class BrowserViewController implements Initializable {
                 switch (e.getCode()) {
                     case N:
                         // create new file
-                        mdFilePath = null;
-                        editArea.setText("");
-                        webEngine.load("");
+                        if (e.isControlDown()) {
+                            mdFilePath = null;
+                            editArea.setText("");
+                            webEngine.load("");
+                        }
                         break;
                     case S:
 
@@ -172,7 +174,7 @@ public class BrowserViewController implements Initializable {
                                     Path p2 = Paths.get(mdFilePath);
                                     String relPath = ResourceUtils.getRelativePath(p1.toString(), p2.toString(), "\\\\");
                                     editArea.insertText(editArea.getCaretPosition(),
-                                            "![](file:" + relPath + ")");
+                                            "\n![](file:" + relPath + ")\n");
 
                                 } catch (IOException ex) {
                                     Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
