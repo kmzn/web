@@ -215,6 +215,8 @@ public class BrowserViewController implements Initializable {
         // テキストフィールドの幅をボーダペインの幅にバインドする
         urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
         urlField.setText(ConvertService.PANDOC);
+        
+        webView.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 640), 640));
         webEngine = webView.getEngine();
 
         // ヒストリを取得
