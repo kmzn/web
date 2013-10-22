@@ -41,6 +41,8 @@ public class BrowserViewController implements Initializable {
     private FileReaderService fileReaderService = new FileReaderService();
     private Boolean isFileLoading = false;
     private String mdFilePath = null;
+    
+    private Boolean isConvertCancel = false;
 
     @FXML
     public void chooseFile(ActionEvent event) {
@@ -100,6 +102,9 @@ public class BrowserViewController implements Initializable {
                 if (isFileLoading) {
                     return;
                 }
+                if (isConvertCancel) {
+                    return;
+                }
                 if (mdFilePath == null) {
                     return;
                 }
@@ -122,7 +127,12 @@ public class BrowserViewController implements Initializable {
         editArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent e) {
+                isConvertCancel = false;
                 switch (e.getCode()) {
+                    // 削除するときはHTML変換しなくていい
+                    case BACK_SPACE:
+                        isConvertCancel = true;
+                        break;
                     case N:
                         // create new file
                         if (e.isControlDown()) {
