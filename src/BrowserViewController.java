@@ -187,6 +187,20 @@ public class BrowserViewController implements Initializable {
                 }
             }
         });
+        
+        editArea.setStyle("-fx-text-fill: #44dd44;"+
+                "-fx-background-color: #2d2d2d;"+
+                "-fx-font: Courier New;"+
+                "-fx-font-family: Courier New;"+
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 30;");
+        
+        root.setStyle("-fx-text-fill: #111111;"+
+                "-fx-background-color: #212121;"+
+                "-fx-font: Courier New;"+
+                "-fx-font-family: Courier New;"+
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 20;");
 
         // テキストフィールドの幅をボーダペインの幅にバインドする
         urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
