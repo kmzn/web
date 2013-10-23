@@ -11,7 +11,7 @@ import javafx.scene.web.WebEngine;
  */
 public class ConvertService extends Service {
 
-    static final String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=tango ";
+    static final String PANDOC = "pandoc -s -f markdown -t html5 --highlight-style=zenburn ";
     private final Lock lock = new ReentrantLock();
     public String userCommand = PANDOC;
     public String filePath;
@@ -43,7 +43,7 @@ public class ConvertService extends Service {
                     try {
 
                         final String htmlPath = filePath.replaceAll("\\.md", ".html");
-                        final String command = userCommand + filePath + " -o " + htmlPath;
+                        final String command = userCommand + " " + filePath + " -o " + htmlPath;
                         Process p = Runtime.getRuntime().exec(command);
                         p.waitFor();
                         
