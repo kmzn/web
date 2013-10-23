@@ -2,6 +2,8 @@
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -36,6 +38,10 @@ public class FileReaderService extends Service {
         } else {
             // perform alternative actions
         }
+    }
+    
+    public byte[] getLines() {
+        return lines;
     }
 
     @Override
