@@ -29,5 +29,6 @@ public class HtmlBrowser extends Application {
     @Override
     public void stop() {
         TempFileDeleter.getInstance().deleteAll();
+        CommandHistory.getInstance().save();
     }
 }

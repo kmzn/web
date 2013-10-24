@@ -19,6 +19,7 @@ public class CommandFieldHandler {
     }
     
     public void initialize(TextField commandField, BorderPane root) {
+        // コマンド履歴ファイルがあるならそれを反映させる
         commandField.setText(ConvertService.PANDOC);
         commandField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
     }

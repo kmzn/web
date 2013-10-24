@@ -2,6 +2,9 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.logging.Level;
@@ -109,6 +112,37 @@ public class CommandHistory {
 
         }
         return ret;
+    }
+    
+    public void save() {
+        
+        String res = "" + commandMax + System.getProperty("line.separator");
+        
+        String[] src = new String[commands.size()];
+        Iterator<String> setIterator = commands.iterator();
+        int i = 0;
+        while (setIterator.hasNext()) {
+            src[i++] = setIterator.next();
+        }
+        //for(String c : src) System.out.println(c);
+        final int last = commands.size()-1;
+        int len = 0;
+        if (last >= commandMax) len = last - commandMax;
+        i = 0;
+        for (int j = last; j >= len; --j) {
+            //System.out.println(src[j] + "  " + j);
+            //oriCommands[i++] = src[j];
+            res += src[j] + System.getProperty("line.separator");
+        }
+        
+        //System.out.println("" + res);
+        byte[] bytes = res.getBytes();
+        Path dest = Paths.get(filePath);
+        try {
+            Files.write(dest, bytes);
+        } catch (IOException ex) {
+            Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // インスタンス取得メソッド
