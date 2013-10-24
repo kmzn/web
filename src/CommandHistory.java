@@ -60,12 +60,16 @@ public class CommandHistory {
     }
     
     public void add(String command, String[] oriCommands) {
-        
+        //System.out.println("add " + command + "  "  + commandNumber);
+        int cNum = commands.size();
         commands.add(command);
-        if (++commandNumber > commandMax) {
+        if (cNum < commands.size()) {
+            ++commandNumber;
+        }
+        if (commandNumber > commandMax) {
             commandNumber = commandMax - 1;
         }
-        //System.out.println(command + "  "  + commandNumber);
+        //System.out.println("add " + command + "  "  + commandNumber);
         String[] src = new String[commands.size()];
         Iterator<String> setIterator = commands.iterator();
         int i = 0;
@@ -76,8 +80,10 @@ public class CommandHistory {
         }
         //for(String c : src) System.out.println(c);
         final int last = commands.size()-1;
+        int len = 0;
+        if (last >= commandMax) len = last - commandMax;
         i = 0;
-        for (int j = last; j >= 0; --j) {
+        for (int j = last; j >= len; --j) {
             System.out.println(src[j] + "  " + j);
             oriCommands[i++] = src[j];
         }
