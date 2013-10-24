@@ -28,7 +28,7 @@
     <top>
         <HBox id="hbox" prefHeight="60.0" prefWidth="200.0">
             <children>
-                <TextField fx:id="urlField" onAction="#load" prefWidth="200.0" />
+                <TextField fx:id="commandField" onAction="#load" prefWidth="200.0" />
                 <Button text="file" prefWidth="80.0" fx:id="fileButton" onAction="#chooseFile" />
   
             </children>

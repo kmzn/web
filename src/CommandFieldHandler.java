@@ -1,20 +1,7 @@
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.BACK_SPACE;
-import static javafx.scene.input.KeyCode.N;
-import static javafx.scene.input.KeyCode.P;
-import static javafx.scene.input.KeyCode.S;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
