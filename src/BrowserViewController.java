@@ -30,11 +30,12 @@ public class BrowserViewController implements Initializable {
     @FXML
     private BorderPane root;
     @FXML
-    private TextField urlField;
-    @FXML
     private WebView webView;
     @FXML
     private TextArea editArea;
+    @FXML
+    private TextField commandField;
+    private CommandFieldHandler commandFieldHandler = new CommandFieldHandler();
     private WebEngine webEngine;
     private WebHistory webHistory;
     private ConvertService convertService = new ConvertService();
@@ -70,7 +71,7 @@ public class BrowserViewController implements Initializable {
 
     @FXML
     public void load(ActionEvent event) {
-        convertService.userCommand = urlField.getText();
+        convertService.userCommand = commandFieldHandler.getText(commandField);
         if (mdFilePath != null) {
             convertService.filePath = mdFilePath;
             convertService.restart();
@@ -212,9 +213,9 @@ public class BrowserViewController implements Initializable {
                 "-fx-font-weight: bold;"+
                 "-fx-font-size: 20;");
 
-        // テキストフィールドの幅をボーダペインの幅にバインドする
-        urlField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
-        urlField.setText(ConvertService.PANDOC);
+
+        commandFieldHandler.initialize(commandField, root);
+        commandFieldHandler.setOnKeyPressed(commandField);
         
         webView.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 640), 640));
         webEngine = webView.getEngine();

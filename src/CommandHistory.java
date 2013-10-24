@@ -2,6 +2,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,13 +21,16 @@ public class CommandHistory {
     private LinkedHashSet<String> commands = new LinkedHashSet<>();
     private FileReaderService fileReaderService = new FileReaderService();
     // １行目は必ず履歴の個数
-    public int commandNumber = 100;
+    public int commandMax = 10;
+    public int commandNumber = 0;
     
     private CommandHistory() {
         fileReaderService.filePath = filePath;
         File file = new File(filePath);
+        Boolean isNew = false;
         if (file == null) {
             try {
+                isNew = true;
                 file.createNewFile();
             } catch (IOException ex) {
                 Logger.getLogger(CommandHistory.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,7 +45,7 @@ public class CommandHistory {
                 try {
                     String ret = System.getProperty("line.separator");
                     String[] lines = new String(fileReaderService.getLines(), "UTF-8").split(ret);
-                    commandNumber = Integer.parseInt(lines[0]);
+                    commandMax = Integer.parseInt(lines[0]);
                     final int len = lines.length;
                     for (int i = 1; i < len; ++i) {
                         commands.add(lines[i]);
@@ -51,7 +55,54 @@ public class CommandHistory {
                 }
             }
         });
-        fileReaderService.restart();
+        if ( ! isNew)
+            fileReaderService.restart();
+    }
+    
+    public void add(String command, String[] oriCommands) {
+        
+        commands.add(command);
+        if (++commandNumber > commandMax) {
+            commandNumber = commandMax - 1;
+        }
+        //System.out.println(command + "  "  + commandNumber);
+        String[] src = new String[commands.size()];
+        Iterator<String> setIterator = commands.iterator();
+        int i = 0;
+        while (setIterator.hasNext()) {
+            //
+            src[i++] = setIterator.next();
+            
+        }
+        //for(String c : src) System.out.println(c);
+        final int last = commands.size()-1;
+        i = 0;
+        for (int j = last; j >= 0; --j) {
+            System.out.println(src[j] + "  " + j);
+            oriCommands[i++] = src[j];
+        }
+        
+    }
+
+    public String[] get() {
+        String[] ret = null;
+        if (commands.size() == 0) {
+            ret = new String[commandMax];
+            ret[0] = ConvertService.PANDOC;
+            commands.add(ConvertService.PANDOC);
+            commandNumber = 1;
+        } else {
+            ret = new String[commands.size()];
+            Iterator<String> setIterator = commands.iterator();
+            int i = 0;
+            while (setIterator.hasNext()) {
+                //System.out.println(setIterator.next());
+                ret[i++] = setIterator.next();
+            }
+            commandNumber = i;
+
+        }
+        return ret;
     }
     
     // インスタンス取得メソッド
