@@ -12,20 +12,17 @@ import javafx.scene.layout.BorderPane;
  */
 public class CommandFieldHandler {
 
-    private int commandIndex = 0;
-    private String[] commands = CommandHistory.getInstance().get();
     public CommandFieldHandler() {
-        
     }
     
     public void initialize(TextField commandField, BorderPane root) {
-        // コマンド履歴ファイルがあるならそれを反映させる
-        commandField.setText(ConvertService.PANDOC);
+        
+        CommandHistory.getInstance().fileReadStart(commandField);
         commandField.prefWidthProperty().bind(Bindings.max(Bindings.subtract(root.widthProperty(), 200), 200));
     }
     
     public String getText(TextField commandField) {
-        CommandHistory.getInstance().add(commandField.getText(), commands);
+        CommandHistory.getInstance().add(commandField.getText());
         return commandField.getText();
     }
     
@@ -36,16 +33,10 @@ public class CommandFieldHandler {
                 
                 switch (e.getCode()) {
                     case UP:
-                        if (++commandIndex > CommandHistory.getInstance().commandNumber - 1) {
-                            commandIndex = 0;
-                        }
-                        commandField.setText(commands[commandIndex]);
+                        commandField.setText(CommandHistory.getInstance().getNext());
                         break;
                     case DOWN:
-                        if (--commandIndex < 0) {
-                            commandIndex = CommandHistory.getInstance().commandNumber - 1;
-                        }
-                        commandField.setText(commands[commandIndex]);
+                        commandField.setText(CommandHistory.getInstance().getPrevious());
                         break;
                 }
             }
