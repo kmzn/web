@@ -134,6 +134,29 @@ public class BrowserViewController implements Initializable {
                     case BACK_SPACE:
                         isConvertCancel = true;
                         break;
+                    case O:
+                        if (e.isControlDown()) {
+                            FileChooserManager.getInstance().changeMode(FileChooserManager.Mode.MD);
+                            File importFile = FileChooserManager.getInstance().showDialog();
+                            if (importFile != null) {
+
+                                isFileLoading = true;
+                                mdFilePath = importFile.getAbsolutePath();
+
+                                convertService.filePath = mdFilePath;
+                                convertService.restart();
+
+                                fileReaderService.filePath = mdFilePath;
+                                fileReaderService.restart();
+
+                                final String tempPath = mdFilePath.replaceAll("\\.md", "_temp.md");
+                                TempFileDeleter.getInstance().add(tempPath);
+                                TempFileDeleter.getInstance().add(tempPath.replaceAll("\\.md", ".html"));
+                            } else {
+                                mdFilePath = null;
+                            }
+                        }
+                        break;
                     case N:
                         // create new file
                         if (e.isControlDown()) {
