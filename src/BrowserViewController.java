@@ -1,4 +1,5 @@
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -134,6 +135,22 @@ public class BrowserViewController implements Initializable {
                     case BACK_SPACE:
                         isConvertCancel = true;
                         break;
+                    case B:
+                        if (mdFilePath == null) {
+                            return;
+                        }
+                        if (e.isControlDown()) {
+                            Desktop desktop = Desktop.getDesktop();
+                            try {
+//System.out.println(" " + new URI(mdFilePath).toString());
+                                desktop.browse(new File(mdFilePath.replaceAll("\\.md", ".html")).toURI());
+                            } catch (IOException ex) {
+                                Logger.getLogger(BrowserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        break;
+
                     case O:
                         if (e.isControlDown()) {
                             FileChooserManager.getInstance().changeMode(FileChooserManager.Mode.MD);
