@@ -135,6 +135,12 @@ public class BrowserViewController implements Initializable {
                     case BACK_SPACE:
                         isConvertCancel = true;
                         break;
+                    case SPACE:
+                        isConvertCancel = true;
+                        break;
+                    case ENTER:
+                        isConvertCancel = true;
+                        break;
                     case B:
                         if (mdFilePath == null) {
                             return;
